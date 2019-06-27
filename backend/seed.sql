@@ -14,7 +14,8 @@ CREATE TABLE stocks (
     id SERIAL PRIMARY KEY,
     userid INT REFERENCES users(id),
     stock VARCHAR NOT NULL,
-    shares INT NOT NULL
+    shares INT NOT NULL,
+    openprice INT NOT NULL
 )
 
 CREATE TABLE transactions (
