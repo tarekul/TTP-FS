@@ -2,9 +2,9 @@ const express = require('express')
 const userrouter = express.Router()
 const userserv = require('../services/userservice')
 
-userrouter.get('/:username',(req,res)=>{
-    const {username} = req.params
-    userserv.readUser(username)
+userrouter.get('/:email',(req,res)=>{
+    const {email} = req.params
+    userserv.readUser(email)
     .then(response=>{
         res.json(response)
     })
@@ -12,16 +12,16 @@ userrouter.get('/:username',(req,res)=>{
 })
 
 userrouter.post('/',(req,res)=>{
-    const {name,username,balance,token} = req.body
-    userserv.postUser(name,username,balance,token)
+    const {name,email,balance,token} = req.body
+    userserv.postUser(name,email,balance,token)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })
 
-userrouter.put('/:username',(req,res)=>{
-    const {username} = req.params;
+userrouter.put('/:email',(req,res)=>{
+    const {email} = req.params;
     const {balance} = req.body;
-    userserv.postUser(username,balance)
+    userserv.postUser(email,balance)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })

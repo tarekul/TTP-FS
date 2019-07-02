@@ -2,9 +2,9 @@ const express = require('express')
 const transrouter = express.Router()
 const transserv = require('../services/transservice')
 
-transrouter.get('/:username',(req,res)=>{
-    const {username} = req.params
-    transserv.readUser(username)
+transrouter.get('/:email',(req,res)=>{
+    const {email} = req.params
+    transserv.readUser(email)
     .then(response=>{
         res.json(response)
     })
@@ -12,8 +12,8 @@ transrouter.get('/:username',(req,res)=>{
 })
 
 transrouter.post('/',(req,res)=>{
-    const {username,stock,shares,price} = req.body
-    transserv.postTrade(username,stock,shares,price)
+    const {email,stock,shares,price} = req.body
+    transserv.postTrade(email,stock,shares,price)
     .then(response=>{
         res.json(response)
     })
