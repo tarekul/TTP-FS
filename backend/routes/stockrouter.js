@@ -2,9 +2,9 @@ const express = require('express')
 const stockrouter = express.Router()
 const stockserv = require('../services/stockservice')
 
-stockrouter.get('/:username',(req,res)=>{
-    const {username} = req.params
-    stockserv.readUser(username)
+stockrouter.get('/:email',(req,res)=>{
+    const {email} = req.params
+    stockserv.readUser(email)
     .then(response=>{
         res.json(response)
     })
@@ -12,16 +12,16 @@ stockrouter.get('/:username',(req,res)=>{
 })
 
 stockrouter.post('/',(req,res)=>{
-    const {username,stock,shares} = req.body
-    stockserv.postStock(username,stock,shares)
+    const {email,stock,shares} = req.body
+    stockserv.postStock(email,stock,shares)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })
 
-stockrouter.put('/:username',(req,res)=>{
-    const {username} = req.params;
+stockrouter.put('/:email',(req,res)=>{
+    const {email} = req.params;
     const {stock, shares} = req.body;
-    stockserv.postStock(username,stock,shares)
+    stockserv.postStock(email,stock,shares)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })

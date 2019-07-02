@@ -3,19 +3,19 @@ const dbAddr = 'postgres://localhost/stockportfolio'
 const db = getDBConnect(dbAddr)
 const userserv = {}
 
-userserv.readUser = username =>{
-    const sql = `SELECT * FROM users WHERE username=$[username]`
-    return db.any(sql,{username})
+userserv.readUser = email =>{
+    const sql = `SELECT * FROM users WHERE email=$[email]`
+    return db.any(sql,{email})
 }
 
-userserv.postUser = (name,username,balance,token) =>{
-    const sql = 'INSERT INTO users (name,username,balance,token) VALUES ($[name],$[username],$[balance],$[token]) RETURNING id'
-    return db.one(sql,{name,username,balance,token})
+userserv.postUser = (name,email,balance,token) =>{
+    const sql = 'INSERT INTO users (name,email,balance,token) VALUES ($[name],$[email],$[balance],$[token]) RETURNING id'
+    return db.one(sql,{name,email,balance,token})
 }
 
-userserv.updateBalance = (username,balance) =>{
-    const sql = 'UPDATE users SET balance=$[balance] WHERE username=$[username] RETURNING balance'
-    return db.one(sql,{username,balance})
+userserv.updateBalance = (email,balance) =>{
+    const sql = 'UPDATE users SET balance=$[balance] WHERE email=$[email] RETURNING balance'
+    return db.one(sql,{email,balance})
 }
 
 module.exports = userserv;

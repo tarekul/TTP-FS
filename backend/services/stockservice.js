@@ -3,19 +3,19 @@ const dbAddr = 'postgres://localhost/stockportfolio'
 const db = getDBConnect(dbAddr)
 const stockserv = {}
 
-stockserv.readUser = username =>{
-    const sql = `SELECT * FROM stocks WHERE username=$[username]`
-    return db.any(sql,{username})
+stockserv.readUser = email =>{
+    const sql = `SELECT * FROM stocks WHERE email=$[email]`
+    return db.any(sql,{email})
 }
 
-stockserv.postStock = (username,stock,shares) =>{
-    const sql = 'INSERT INTO stocks (username,stock,shares,openprice) VALUES ($[username],$[stock],$[shares],$[openprice]) RETURNING id'
-    return db.one(sql,{username,stock,shares})
+stockserv.postStock = (email,stock,shares) =>{
+    const sql = 'INSERT INTO stocks (email,stock,shares,openprice) VALUES ($[email],$[stock],$[shares],$[openprice]) RETURNING id'
+    return db.one(sql,{email,stock,shares})
 }
 
-stockserv.updateShares = (username,stock,shares) =>{
-    const sql = 'UPDATE stocks SET shares=$[shares] WHERE username=$[username] AND stock=$[stock] RETURNING shares'
-    return db.one(sql,{username,stock,shares})
+stockserv.updateShares = (email,stock,shares) =>{
+    const sql = 'UPDATE stocks SET shares=$[shares] WHERE email=$[email] AND stock=$[stock] RETURNING shares'
+    return db.one(sql,{email,stock,shares})
 }
 
 module.exports = stockserv;
