@@ -1,9 +1,10 @@
 import React from 'react'
 
-const Validateform = (props) =>{
+const RegisterError = (props) =>{
     return <div class="alert alert-danger" role="alert" style={{marginBottom:'0px'}}>
-                Please fill out the form
+                {props.error}
             </div>
+       
 }
 
-export default Validateform
+export default RegisterError
