@@ -1,20 +1,29 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import AuthContext from '../contexts/authContext'
 
+import Navlinks from '../components/navlinks'
 const Nav = (props) =>{
-    return <><div class='container mt-5'><ul class="nav justify-content-center">
-    <li class="nav-item">
-      <h2>Stock Portfolio</h2>
-    </li>
-    <li class="nav-item">
-        <Link to='/register'><a class="nav-link" href="#">Sign Up</a></Link>
-    </li>
-    <li class="nav-item">
-        <Link to='/register'><a class="nav-link" href="#">Login</a></Link>
-    </li>
-  </ul>
-  </div>
-  </>
+    return <>
+      <AuthContext.Consumer>
+        {
+          user=>{
+            if(user) return <>
+              <div class='container mt-5'><ul class="nav justify-content-center">
+                <li class="nav-item"><h2>Stock Portfolio</h2></li>
+              </ul></div>
+            </>
+            else return <>
+              <div class='container mt-5'><ul class="nav justify-content-center">
+                <Navlinks />
+              </ul></div>
+            </>
+          }
+        }
+       
+      </AuthContext.Consumer>
+      
+    </>
 }
 
 export default Nav
