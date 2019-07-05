@@ -5,6 +5,7 @@ import Validateform from '../components/validateform'
 import RegisterError from '../components/registererror'
 import firebase from '../firebase'
 import AuthContext from '../contexts/authContext'
+import axios from 'axios';
 
 
 class Register extends React.Component{
@@ -19,7 +20,6 @@ class Register extends React.Component{
     }
 
     componentDidMount(){
-        //console.log(this.context)
         if(this.context) this.props.history.push('/portfolio')
     }
     onChange = (e)=>{
@@ -32,7 +32,20 @@ class Register extends React.Component{
         const {firstname,lastname,email,password} = this.state
         if(firstname && lastname && email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
-            .then(()=>this.props.history.push('/portfolio'))
+            .then((response)=>{
+                console.log(response.user.uid)
+                axios.post(`http://localhost:6003/user`,{
+                    name:firstname + " " + lastname,
+                    email:email,
+                    balance:5000,
+                    token:response.user.uid
+                })
+                .then(res=>{
+                    console.log(res)
+                    this.props.history.push('/portfolio')
+                })
+                
+            })
             .catch(err => this.setState({validated:true,error:err.message}))
         }
         else this.setState({validated:false,error:null})

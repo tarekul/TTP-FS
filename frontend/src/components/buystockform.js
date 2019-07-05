@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
+
 class StockForm extends React.Component{
     state = {
         pubToken:'pk_36cce85f17164c5a815a8c420668ac38',
@@ -9,6 +10,10 @@ class StockForm extends React.Component{
         current:0,
         quantity:1,
         error:false
+    }
+
+    componentDidMount(){
+       
     }
     
     handleInput(e){

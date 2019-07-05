@@ -1,10 +1,17 @@
 import React from 'react'
 import Stockform from '../components/buystockform'
 import Stocks from '../components/stocks'
+import AuthContext from '../contexts/authContext'
 
 class Portfolio extends React.Component{
+    static contextType = AuthContext
     state = {
         stocks_avail:true
+    }
+
+    componentDidMount(){
+        
+        console.log('here',this.context)
     }
     render(){
         const {stocks_avail} = this.state

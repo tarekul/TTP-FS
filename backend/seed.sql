@@ -26,6 +26,6 @@ CREATE TABLE transactions (
     price INT NOT NULL
 );
 
-INSERT INTO users (name,email,balance,token) VALUES ('tarek','tarek123@gmail.com',5000,'test');
-INSERT INTO stocks (email,stock,shares) VALUES ('tarek123@gmail.com','stockexample',5);
-INSERT INTO transactions (email,stock,shares,price) VALUES ('tarek123@email.com','stockexample',5,300);
+-- INSERT INTO users (name,email,balance,token) VALUES ('tarek','tarek123@gmail.com',5000,'test');
+-- INSERT INTO stocks (email,stock,shares) VALUES ('tarek123@gmail.com','stockexample',5);
+-- INSERT INTO transactions (email,stock,shares,price) VALUES ('tarek123gmail.com','stockexample',5,300);
