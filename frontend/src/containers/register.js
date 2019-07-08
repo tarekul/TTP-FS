@@ -6,6 +6,7 @@ import RegisterError from '../components/registererror'
 import firebase from '../firebase'
 import AuthContext from '../contexts/authContext'
 import axios from 'axios';
+import Service from '../services/service'
 
 
 class Register extends React.Component{
@@ -36,7 +37,7 @@ class Register extends React.Component{
         if(firstname && lastname && email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
             .then((response)=>{
-                //console.log(response.user.uid)
+                Service.save_user(email)
                 axios.post(`http://localhost:6003/user`,{
                     name:firstname + " " + lastname,
                     email:email,

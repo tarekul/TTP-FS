@@ -11,72 +11,39 @@ class Portfolio extends React.Component{
         data:[],
         email:'',
         balance:0,
-        total:0,
-        pubToken:'pk_36cce85f17164c5a815a8c420668ac38'
-        
+        total:0
     }
 
     componentDidMount(){
-        if(this.context){
-            Service.save_user(this.context.email)
-            this.setState({email:this.context.email})
-            axios.get(`http://localhost:6003/stock/${this.context.email}`)
-            .then(res=>{
-                this.updateTotalStocks(res.data)
-                this.setState({data:res.data})
-            })
-            axios.get(`http://localhost:6003/user/${this.context.email}`)
+        this.refreshState(this.context,true)
+    }
+
+    refreshState = (context,getBalance=false) =>{
+        const email = context ? this.context.email : Service.get_user('email')
+        if(context) Service.save_user(email)
+        console.log(email)
+        this.setState({email:email})
+        Service.getStocks(email)
+        .then(res=>{
+            this.updateTotalStocks(res.data)
+            this.setState({data:res.data})
+        })
+        if(getBalance){
+            Service.getUser(email)
             .then(res=>{
                 const balance = res.data[0].balance
                 this.setState({balance:balance})
             })
         }
-        else if(!this.context){
-            const email = Service.get_user('email')
-            if(email){
-                this.setState({email:email})
-                axios.get(`http://localhost:6003/stock/${email}`)
-                .then(res=>{
-                    this.updateTotalStocks(res.data)
-                    this.setState({data:res.data})
-                })
-                axios.get(`http://localhost:6003/user/${email}`)
-                .then(res=>{
-                    const balance = res.data[0].balance
-                    this.setState({balance:balance})
-                })
-            }
-            else this.props.history.push('/')
-        } 
     }
-
-    
 
 
     stockupdate = () =>{
-        if(this.context){
-            Service.save_user(this.context.email)
-            axios.get(`http://localhost:6003/stock/${this.context.email}`)
-            .then(res=>{
-                this.updateTotalStocks(res.data)
-                this.setState({data:res.data},()=>console.log(this.state))
-            })
-        }
-        else if(!this.context){
-            const email = Service.get_user()
-            if(email){
-                axios.get(`http://localhost:6003/stock/${email}`)
-                .then(res=>{
-                    this.updateTotalStocks(res.data)
-                    this.setState({data:res.data})
-                }) 
-            }
-            else this.props.history.push('./register')
-        }
+        this.refreshState(this.context)
     }
 
     updateTotalStocks = (data) =>{
-        const {pubToken,total} = this.state
+        const pubToken = 'pk_36cce85f17164c5a815a8c420668ac38'
         
         const promises = data.map(e=>{
             return axios.get(`https://cloud.iexapis.com/stable/stock/${e.stock}/price?token=${pubToken}`)
@@ -95,9 +62,7 @@ class Portfolio extends React.Component{
 
     render(){
         const {data,email,balance,total} = this.state;
-        console.log('updated data...', data);
         const stockupdate = this.stockupdate;
-        // email={email} stockupdate={this.stockupdate} balance={balance}
         return <>
             <div class='container mt-5'>
                 <h3 class="display-6">{`Portfolio ($${total})`}</h3>

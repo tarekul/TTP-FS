@@ -5,6 +5,8 @@ import Register from './containers/register'
 import Nav from './containers/nav'
 import Portfolio from './containers/portfolio'
 import Transactions from './containers/transactions'
+import Logout from './containers/logout'
+import SignIn from './containers/signin'
 import AuthContext from './contexts/authContext'
 
 class App extends React.Component{
@@ -26,8 +28,10 @@ class App extends React.Component{
         <AuthContext.Provider value={user}>
           <Route path='/' component={Nav}/>
           <Route path='/' exact component={Portfolio}/>
-         <Route path='/register' exact component={Register}/>
-         <Route path='/transactions' exact component={Transactions}/>
+          <Route path='/register' exact component={Register}/>
+          <Route path='/transactions' exact component={Transactions}/>
+          <Route path = '/logout' exact component={Logout} />
+          <Route path = '/signin' exact component={SignIn} />
         </AuthContext.Provider>
       </HashRouter>
     )

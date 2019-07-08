@@ -6,7 +6,7 @@ const Navlinks = props =>{
                 <Link to='/register'><a class="nav-link" href="#">Sign Up</a></Link>
                 </li>
                 <li class="nav-item">
-                <Link to='/register'><a class="nav-link" href="#">Login</a></Link>
+                <Link to='/signin'><a class="nav-link" href="#">Login</a></Link>
             </li>
         </>
 }
