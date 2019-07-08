@@ -21,7 +21,7 @@ userrouter.post('/',(req,res)=>{
 userrouter.put('/:email',(req,res)=>{
     const {email} = req.params;
     const {balance} = req.body;
-    userserv.postUser(email,balance)
+    userserv.updateBalance(email,balance)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })

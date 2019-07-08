@@ -8,8 +8,13 @@ stockserv.readUser = email =>{
     return db.any(sql,{email})
 }
 
+stockserv.checkIfStockExists = (email,stock) =>{
+    const sql = `SELECT * FROM stocks WHERE email = $[email] AND stock=$[stock]`
+    return db.any(sql,{email,stock})
+}
+
 stockserv.postStock = (email,stock,shares) =>{
-    const sql = 'INSERT INTO stocks (email,stock,shares,openprice) VALUES ($[email],$[stock],$[shares],$[openprice]) RETURNING id'
+    const sql = 'INSERT INTO stocks (email,stock,shares) VALUES ($[email],$[stock],$[shares]) RETURNING id'
     return db.one(sql,{email,stock,shares})
 }
 

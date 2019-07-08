@@ -9,7 +9,7 @@ userserv.readUser = email =>{
 }
 
 userserv.postUser = (name,email,balance,token) =>{
-    const sql = 'INSERT INTO users (name,email,balance,token) VALUES ($[name],$[email],$[balance],$[token]) RETURNING id'
+    const sql = 'INSERT INTO users (name,email,balance,token) VALUES ($[name],$[email],$[balance],$[token]) RETURNING email'
     return db.one(sql,{name,email,balance,token})
 }
 

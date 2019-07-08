@@ -4,6 +4,7 @@ import firebase from './firebase'
 import Register from './containers/register'
 import Nav from './containers/nav'
 import Portfolio from './containers/portfolio'
+import Transactions from './containers/transactions'
 import AuthContext from './contexts/authContext'
 
 class App extends React.Component{
@@ -11,7 +12,11 @@ class App extends React.Component{
     user:null
   }
   componentDidMount(){
-    firebase.auth().onAuthStateChanged(user=>this.setState({user}))
+    this.unsubscribe = firebase.auth().onAuthStateChanged(user=>this.setState({user}))
+  }
+
+  componentWillUnmount(){
+    this.unsubscribe()
   }
   render(){
     const {user} = this.state
@@ -20,12 +25,16 @@ class App extends React.Component{
       <HashRouter>
         <AuthContext.Provider value={user}>
           <Route path='/' component={Nav}/>
-          <Route path='/register' exact component={Register}/>
-          <Route path='/portfolio' exact component={Portfolio}/>
+          <Route path='/' exact component={Portfolio}/>
+         <Route path='/register' exact component={Register}/>
+         <Route path='/transactions' exact component={Transactions}/>
         </AuthContext.Provider>
       </HashRouter>
-    );
+    )
+
   }
+    
+    
   
 }
 

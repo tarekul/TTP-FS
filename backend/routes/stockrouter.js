@@ -11,6 +11,13 @@ stockrouter.get('/:email',(req,res)=>{
     .catch(err=>res.json(err))
 })
 
+stockrouter.get('/:email/check/:stock',(req,res)=>{
+    const{email,stock} = req.params
+    stockserv.checkIfStockExists(email,stock)
+    .then(response=>res.json(response))
+    .catch(err=>res.json(err))
+})
+
 stockrouter.post('/',(req,res)=>{
     const {email,stock,shares} = req.body
     stockserv.postStock(email,stock,shares)
@@ -21,7 +28,7 @@ stockrouter.post('/',(req,res)=>{
 stockrouter.put('/:email',(req,res)=>{
     const {email} = req.params;
     const {stock, shares} = req.body;
-    stockserv.postStock(email,stock,shares)
+    stockserv.updateShares(email,stock,shares)
     .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })

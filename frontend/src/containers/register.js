@@ -20,7 +20,10 @@ class Register extends React.Component{
     }
 
     componentDidMount(){
-        if(this.context) this.props.history.push('/portfolio')
+        console.log('register component did mount')
+        firebase.auth().onAuthStateChanged(user =>{
+            if(user) this.props.history.push('/')
+        })
     }
     onChange = (e)=>{
         this.setState({[e.target.id]:e.target.value})
@@ -33,7 +36,7 @@ class Register extends React.Component{
         if(firstname && lastname && email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
             .then((response)=>{
-                console.log(response.user.uid)
+                //console.log(response.user.uid)
                 axios.post(`http://localhost:6003/user`,{
                     name:firstname + " " + lastname,
                     email:email,
@@ -41,8 +44,8 @@ class Register extends React.Component{
                     token:response.user.uid
                 })
                 .then(res=>{
-                    console.log(res)
-                    this.props.history.push('/portfolio')
+                    //console.log(res)
+                    this.props.history.push('/')
                 })
                 
             })

@@ -1,18 +1,20 @@
 import React from 'react'
+import axios from 'axios';
+import Stock from './stock';
 
-const Stocks = props =>{
-    return <>
-        <div class='col-6' style={{backgroundColor:'yellow',padding:'5%'}}>
-            <div class='row' style={{minHeight:'5vh'}}>
-                <div class='col-8' style={{backgroundColor:"blue"}}></div>
-                <div class='col-4' style={{backgroundColor:"orange"}}></div>
+const Stocks = props => {
+    const stockList = props.data;
+
+    return (
+        <>
+            <div class='col-6' style={{backgroundColor:'whitesmoke',padding:'5%',borderRight:'1px solid black'}}>
+                {stockList.map( (e,i) =>{
+                    return <Stock obj={e}  key={i}/>
+                })}
             </div>
-            <div class='row' style={{minHeight:'5vh'}}>
-                <div class='col-8' style={{backgroundColor:"pink"}}></div>
-                <div class='col-4' style={{backgroundColor:"turquoise"}}></div>
-            </div>
-        </div>
-    </>
+        </>
+    )
+    
 }
 
 export default Stocks
