@@ -11,7 +11,7 @@ const Nav = (props) =>{
             if(user) return <>
               <div className='container mt-5'>
                 <div style={{textAlign:'center'}}>
-                <h1 class="display-3">Stock Portfolio</h1>
+                <h1 className="display-3">Stock Portfolio</h1>
                 </div>
                 <ul className="nav" style={{display:'flex',justifyContent:'flex-end'}}>
                   <li className="nav-item"><Link to='/' className='nav-link active'>Portfolio</Link></li>

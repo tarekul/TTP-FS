@@ -6,7 +6,7 @@ const Stocks = props => {
 
     return (
         <>
-            <div class='col-6' style={{backgroundColor:'whitesmoke',padding:'5%',borderRight:'1px solid black'}}>
+            <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%',borderRight:'1px solid black'}}>
                 {stockList.map( (e,i) =>{
                     return <Stock obj={e}  key={i}/>
                 })}

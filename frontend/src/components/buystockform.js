@@ -64,8 +64,9 @@ class StockForm extends React.Component{
             axios.get(`http://localhost:6003/user/${this.props.email}`)
             .then(res=>{
                 let balance = res.data[0].balance
-                if((quantity * parseFloat(current)).toFixed(2) < balance){
-                    balance = balance - (quantity * parseFloat(current).toFixed(2))
+                const pay = quantity * current
+                if(pay < balance){
+                    balance = (balance - pay).toFixed(2)
                     this.setState({balance:balance})
                     const updatebalance = 
                         axios.put(`http://localhost:6003/user/${this.props.email}`,{
@@ -106,29 +107,29 @@ class StockForm extends React.Component{
     render(){
         const {balance} = this.state
         return <>
-            <div class='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
-            <div class='row'>
-                <div class='col'>
+            <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
+            <div className='row'>
+                <div className='col'>
                     <h4>{`Cash $${balance}`}</h4>
                 </div>
             </div>
-            <div class='row'>
-                <div class='col-5' style={{marginTop:'5%',marginBottom:'5%'}}>
-                    <input type="text" class="form-control" 
+            <div className='row'>
+                <div className='col-5' style={{marginTop:'5%',marginBottom:'5%'}}>
+                    <input type="text" className="form-control" 
                         aria-label="Large" name='ticker' 
                         placeholder='Ticker' onChange={e=>{this.handleInput(e)}} />
                 </div>
             </div>
-            <div class='row'>
-                <div class='col-5' style={{marginTop:'5%',marginBottom:'5%'}}>
-                <input type="text" class="form-control" 
+            <div className='row'>
+                <div className='col-5' style={{marginTop:'5%',marginBottom:'5%'}}>
+                <input type="text" className="form-control" 
                     aria-label="Large" name='quantity'
                     placeholder='Quantity' onChange={e=>{this.handleInput(e)}} />
                 </div>
             </div>
-            <div class='row'>
-                <div class='col'>
-                    <button type="button" class="btn btn-primary" onClick={e=>this.onSubmit()}>Primary</button>
+            <div className='row'>
+                <div className='col'>
+                    <button type="button" className="btn btn-primary" onClick={e=>this.onSubmit()}>Primary</button>
                 </div>
             </div>
             </div>

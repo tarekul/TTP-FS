@@ -24,7 +24,7 @@ class Transactions extends React.Component{
                 {
                     transactions.map( (e,i) =>{
                         return <>
-                            <li class="list-group-item" style={{border:0}}>
+                            <li className="list-group-item" style={{border:0}} key={i}>
                             {`Bought (${e.stock})  - ${e.shares} share${e.shares>1?'s':''}  @ $${e.price.toFixed(2)}`}
                             </li>
                         </>

@@ -48,9 +48,9 @@ export default class Stock extends React.Component{
         const {stock, shares, color, currentPrice} = this.state;
 
         return <>
-            <div class='row' style={{display:'flex',alignItems:'center',borderBottom:'1px solid black',padding:'20px',color:color,fontWeight:700}}>
-                <div class='col-8'>{`${stock} - ${shares}`}</div>
-                <div class='col-4'>{`$${(shares*currentPrice).toFixed(2)}`}</div>
+            <div className='row' style={{display:'flex',alignItems:'center',borderBottom:'1px solid black',padding:'20px',color:color,fontWeight:700}}>
+                <div className='col-8'>{`${stock} - ${shares}`}</div>
+                <div className='col-4'>{`$${(shares*currentPrice).toFixed(2)}`}</div>
             </div>
         </>
     }

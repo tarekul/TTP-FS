@@ -66,13 +66,13 @@ class Portfolio extends React.Component{
         const {data,email,balance,total} = this.state;
         const stockupdate = this.stockupdate;
         return <>
-            <div class='container mt-5'>
-                <h3 class="display-6">{`Portfolio ($${total})`}</h3>
-                <div class='row' style={{minHeight:'72vh',backgroundColor:'red'}}>
+            <div className='container mt-5'>
+                <h3 className="display-6">{`Portfolio ($${total})`}</h3>
+                <div className='row' style={{minHeight:'72vh',backgroundColor:'red'}}>
                     {data.length > 0  ? 
                         <Stocks data={data} updateTotalStocks={this.updateTotalStocks} /> 
                         : 
-                        <div class='col-6' style={{backgroundColor:'snow',padding:'5%'}}>
+                        <div className='col-6' style={{backgroundColor:'snow',padding:'5%'}}>
                             <h2>No Stocks Yet</h2>
                         </div>}
                     <Stockform {...{email, stockupdate, balance}} />

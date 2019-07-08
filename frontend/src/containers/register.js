@@ -60,7 +60,7 @@ class Register extends React.Component{
         const alert2 = error ? <RegisterError error={error} /> : ''
         
         return <>
-            <div class='container mt-5 jumbotron'>
+            <div className='container mt-5 jumbotron'>
             <div style={{minHeight:'10vh'}}>
                 {alert}
                 {alert2}

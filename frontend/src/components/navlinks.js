@@ -2,11 +2,11 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 const Navlinks = props =>{
-    return <><li class="nav-item">
-                <Link to='/register'><a class="nav-link" href="#">Sign Up</a></Link>
+    return <><li className="nav-item">
+                <Link to='/register' className="nav-link">Sign Up</Link>
                 </li>
-                <li class="nav-item">
-                <Link to='/signin'><a class="nav-link" href="#">Login</a></Link>
+                <li className="nav-item">
+                <Link to='/signin' className="nav-link">Login</Link>
             </li>
         </>
 }
