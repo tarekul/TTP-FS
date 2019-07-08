@@ -21,7 +21,6 @@ class Portfolio extends React.Component{
     refreshState = (context,getBalance=false) =>{
         const email = context ? this.context.email : Service.get_user('email')
         if(context) Service.save_user(email)
-        console.log(email)
         this.setState({email:email})
         Service.getStocks(email)
         .then(res=>{
@@ -29,10 +28,9 @@ class Portfolio extends React.Component{
             this.setState({data:res.data})
         })
         if(getBalance){
-            //console.log(email)
             Service.getUser(email)
             .then(res=>{
-                if(res.data[0].length > 0){
+                if(res.data.length > 0){
                     const balance = res.data[0].balance
                     this.setState({balance:balance})
                 }

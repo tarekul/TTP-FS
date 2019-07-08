@@ -7,7 +7,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
-    balance INT NOT NULL,
+    balance REAL NOT NULL,
     token VARCHAR NOT NULL
 );
 
@@ -23,7 +23,7 @@ CREATE TABLE transactions (
     email VARCHAR REFERENCES users(email),
     stock VARCHAR NOT NULL,
     shares INT NOT NULL,
-    price INT NOT NULL
+    price REAL NOT NULL
 );
 
 -- INSERT INTO users (name,email,balance,token) VALUES ('tarek','tarek123@gmail.com',5000,'test');

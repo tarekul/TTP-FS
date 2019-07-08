@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios';
 import Stock from './stock';
 
 const Stocks = props => {

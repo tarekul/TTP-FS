@@ -22,7 +22,6 @@ class App extends React.Component{
   }
   render(){
     const {user} = this.state
-    console.log(user)
     return (
       <HashRouter>
         <AuthContext.Provider value={user}>

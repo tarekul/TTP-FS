@@ -14,11 +14,13 @@ class StockForm extends React.Component{
     }
 
     componentDidMount(){
-        const email = this.props ? this.props.email : Service.get_user()
+        const email = this.props.email ? this.props.email : Service.get_user()
         axios.get(`http://localhost:6003/user/${email}`)
         .then(res=>{
-            const balance = res.data[0].balance
-            this.setState({balance:balance})
+            if(res.data.length > 0){
+                const balance = res.data[0].balance
+                this.setState({balance:balance})
+            }
         })
     }
 
@@ -41,7 +43,6 @@ class StockForm extends React.Component{
                 this.setState({open:res[1].data.open.price,current:res[0].data,error:false})
             })
             .catch(err=>{
-                //console.log(err)
                 this.setState({error:true,open:0,current:0})
             })
         }
@@ -63,8 +64,8 @@ class StockForm extends React.Component{
             axios.get(`http://localhost:6003/user/${this.props.email}`)
             .then(res=>{
                 let balance = res.data[0].balance
-                if(quantity * parseFloat(current) < balance){
-                    balance = balance - (quantity * parseFloat(current))
+                if((quantity * parseFloat(current)).toFixed(2) < balance){
+                    balance = balance - (quantity * parseFloat(current).toFixed(2))
                     this.setState({balance:balance})
                     const updatebalance = 
                         axios.put(`http://localhost:6003/user/${this.props.email}`,{
@@ -84,7 +85,6 @@ class StockForm extends React.Component{
                             .then(()=>this.props.stockupdate())
                         }
                         else{
-                            //console.log(res.data)
                             const prev_quantity = res.data[0].shares
                             const new_quantity = prev_quantity + quantity
                             const shareupdate = 
@@ -109,7 +109,7 @@ class StockForm extends React.Component{
             <div class='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
             <div class='row'>
                 <div class='col'>
-                    <h4>Cash ${balance}</h4>
+                    <h4>{`Cash $${balance}`}</h4>
                 </div>
             </div>
             <div class='row'>

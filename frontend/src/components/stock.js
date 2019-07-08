@@ -12,19 +12,16 @@ export default class Stock extends React.Component{
 
     componentDidMount(){
         const {stock, shares} = this.props.obj;
-        console.log('inside component did mount for stock.js')
         this.getOpenCurrPrice(stock, shares);
     }
     
     componentWillReceiveProps(newProps){
-        console.log('component will receive props what r u doing?');
         const {stock, shares} = newProps.obj
 
         this.getOpenCurrPrice(stock, shares);
     }
     
     getOpenCurrPrice = (stock, shares) =>{
-        console.log('sharessssss', shares);
         const {pubToken} = this.state
         const openPrice = axios.get(`https://cloud.iexapis.com/stable/stock/${stock}/ohlc?token=${pubToken}`)
         const currentPrice = axios.get(`https://cloud.iexapis.com/stable/stock/${stock}/price?token=${pubToken}`)
