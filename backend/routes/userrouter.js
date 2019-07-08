@@ -5,9 +5,7 @@ const userserv = require('../services/userservice')
 userrouter.get('/:email',(req,res)=>{
     const {email} = req.params
     userserv.readUser(email)
-    .then(response=>{
-        res.json(response)
-    })
+    .then(response=>res.json(response))
     .catch(err=>res.json(err))
 })
 

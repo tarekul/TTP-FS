@@ -14,7 +14,7 @@ class StockForm extends React.Component{
     }
 
     componentDidMount(){
-        const email = Service.get_user()
+        const email = this.props ? this.props.email : Service.get_user()
         axios.get(`http://localhost:6003/user/${email}`)
         .then(res=>{
             const balance = res.data[0].balance

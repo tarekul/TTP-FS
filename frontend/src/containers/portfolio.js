@@ -29,10 +29,14 @@ class Portfolio extends React.Component{
             this.setState({data:res.data})
         })
         if(getBalance){
+            //console.log(email)
             Service.getUser(email)
             .then(res=>{
-                const balance = res.data[0].balance
-                this.setState({balance:balance})
+                if(res.data[0].length > 0){
+                    const balance = res.data[0].balance
+                    this.setState({balance:balance})
+                }
+                
             })
         }
     }

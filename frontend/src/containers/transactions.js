@@ -10,38 +10,30 @@ class Transactions extends React.Component{
     }
 
     componentDidMount(){
-        if(this.context){
-            const email = this.context.email
-            axios.get(`http://localhost:6003/transaction/${email}`)
+        const email = this.context ? this.context.email : Service.get_user()
+        Service.getTrans(email)
             .then(res=>{
                 this.setState({transactions:res.data}, ()=>{
                     console.log(this.state);
                 })
             })
         }
-        else{
-            const email = Service.get_user()
-            axios.get(`http://localhost:6003/transaction/${email}`)
-            .then(res=>{
-                this.setState({transactions:res.data}, ()=>{
-                    console.log(this.state);
-                })
-            })
-        }
-        
-    }
 
     render(){
-        const transactions = this.state.transactions;
+        const {transactions} = this.state;
         return <>
             <div className='container mt-5'>
+            <ul class="list-group" style={{padding:'0px'}}>
                 {
                     transactions.map( (e,i) =>{
-                        return <div class='row'>
+                        return <>
+                            <li class="list-group-item">
                             {`Bought (${e.stock})  - ${e.shares} share${e.shares>1?'s':''}  @ $${e.price.toFixed(2)}`}
-                        </div>
+                            </li>
+                        </>
                     })
                 }
+            </ul>
             </div>
         </>
     }
