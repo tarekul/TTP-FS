@@ -14,7 +14,8 @@ class StockForm extends React.Component{
     }
 
     componentDidMount(){
-        const email = this.props.email ? this.props.email : Service.get_user()
+        const email = this.props.email
+        console.log(this.props)
         Service.getUser(email)
         .then(res=>{
             if(res.data.length > 0){

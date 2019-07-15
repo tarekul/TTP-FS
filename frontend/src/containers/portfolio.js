@@ -15,11 +15,22 @@ class Portfolio extends React.Component{
     }
 
     componentDidMount(){
-        this.refreshState(this.context,true)
+        console.log(this.context)
+        //this.refreshState(this.context,true)
     }
 
+    componentDidUpdate(pp, ps){
+        const {email} = this.state
+        if(email === '' && this.context) this.refreshState(this.context,true)
+    }
+
+    componentWillUnmount(){
+        console.log('unmounted')
+    }
     refreshState = (context,getBalance=false) =>{
-        const email = context ? this.context.email : Service.get_user('email')
+        console.log('in refresh state')
+        // const email = context ? this.context.email : Service.get_user('email')
+        const email = this.context.email
         if(context) Service.save_user(email)
         this.setState({email:email})
         Service.getStocks(email)
@@ -65,17 +76,18 @@ class Portfolio extends React.Component{
     render(){
         const {data,email,balance,total} = this.state;
         const stockupdate = this.stockupdate;
+        console.log('Rendered; email: ', email)
         return <>
             <div className='container mt-5'>
                 <h3 className="display-6">{`Portfolio ($${total})`}</h3>
-                <div className='row' style={{minHeight:'72vh',backgroundColor:'red'}}>
+                <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
                     {data.length > 0  ? 
                         <Stocks data={data} updateTotalStocks={this.updateTotalStocks} /> 
                         : 
-                        <div className='col-6' style={{backgroundColor:'snow',padding:'5%'}}>
+                        <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
                             <h2>No Stocks Yet</h2>
                         </div>}
-                    <Stockform {...{email, stockupdate, balance}} />
+                    {email? <Stockform {...{email, stockupdate, balance}} />:null}
                 </div>
             </div>
       </>
