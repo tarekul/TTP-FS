@@ -8,6 +8,7 @@ import AuthContext from '../contexts/authContext'
 import axios from 'axios';
 import Service from '../services/service'
 
+import {Redirect} from 'react-router-dom'
 
 class Register extends React.Component{
     static contextType = AuthContext
@@ -17,7 +18,8 @@ class Register extends React.Component{
         email:'',
         password:'',
         validated:true,
-        error:null
+        error:null,
+        signedup:false
     }
 
     componentDidMount(){
@@ -36,16 +38,8 @@ class Register extends React.Component{
         if(firstname && lastname && email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
             .then((response)=>{
-                Service.save_user(email)
-                return axios.post(`http://localhost:6003/user`,{
-                    name:firstname + " " + lastname,
-                    email:email,
-                    balance:5000,
-                    token:response.user.uid
-                })
-                .then(res=>{
-                    this.props.history.push('/')
-                })
+                Service.postUser(firstname + " " + lastname,email,5000,response.user.uid)
+                .then(res => this.setState({signedup:true}))
                 
             })
             .catch(err => this.setState({validated:true,error:err.message}))
@@ -54,11 +48,11 @@ class Register extends React.Component{
     }
     
     render(){
-        const {validated,error} = this.state
+        const {validated,error,signedup} = this.state
         
         const alert = !validated ? <Validateform /> : ''
         const alert2 = error ? <RegisterError error={error} /> : ''
-        
+        if(signedup) return <Redirect to='/' />
         return <>
             <div className='container mt-5 jumbotron'>
             <div style={{minHeight:'10vh'}}>

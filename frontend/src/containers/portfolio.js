@@ -8,52 +8,70 @@ import axios from 'axios'
 class Portfolio extends React.Component{
     static contextType = AuthContext
     state = {
+        pubToken:'pk_36cce85f17164c5a815a8c420668ac38',
         data:[],
-        email:'',
+        email:null,
         balance:0,
-        total:0
+        total:0,
+        purchaseError:null,
+        loading:true
     }
 
     componentDidMount(){
-        console.log(this.context)
-        //this.refreshState(this.context,true)
+        if(this.context) this.refreshState(true)
     }
 
     componentDidUpdate(pp, ps){
         const {email} = this.state
-        if(email === '' && this.context) this.refreshState(this.context,true)
+        if(!email && this.context) this.refreshState(true)
     }
 
-    componentWillUnmount(){
-        console.log('unmounted')
-    }
-    refreshState = (context,getBalance=false) =>{
-        console.log('in refresh state')
-        // const email = context ? this.context.email : Service.get_user('email')
-        const email = this.context.email
-        if(context) Service.save_user(email)
-        this.setState({email:email})
-        Service.getStocks(email)
+
+    refreshState = (getBalance=false) =>{
+        const {email} = this.state
+        if(!email && this.context){
+            this.setState({email:this.context.email})
+        }
+        
+        Service.getStocks(email || this.context.email)
         .then(res=>{
             this.updateTotalStocks(res.data)
-            this.setState({data:res.data})
+            .then(()=>this.setState({data:res.data,purchaseError:null,loading:false}))
+            
         })
         if(getBalance){
-            Service.getUser(email)
+            Service.getUser(email || this.context.email)
             .then(res=>{
+                console.log(res.data)
                 if(res.data.length > 0){
                     const balance = res.data[0].balance
                     this.setState({balance:balance})
                 }
-                
             })
         }
     }
 
+    toggleLoading = () => this.setState({loading:false})
 
-    stockupdate = () =>{
-        this.refreshState(this.context)
+
+    purchaseStock = (ticker,quantity) =>{
+        const {email} = this.context 
+        const {balance,pubToken} = this.state
+        axios.get(`https://cloud.iexapis.com/stable/stock/${ticker}/price?token=${pubToken}`)
+        .then(res=>{
+            const price = res.data
+            if(balance > price * quantity){
+                const newBalance = balance - (price*quantity)
+                Service.updateStocksNBalance(email,ticker,quantity,newBalance)
+                .then(()=>this.refreshState(true))
+            }
+            else this.setState({purchaseError:'Balance too low'})
+        })
+        .catch(err=>{
+            this.setState({purchaseError:'Could not purchase stock'})
+        })
     }
+
 
     updateTotalStocks = (data) =>{
         const pubToken = 'pk_36cce85f17164c5a815a8c420668ac38'
@@ -61,7 +79,7 @@ class Portfolio extends React.Component{
         const promises = data.map(e=>{
             return axios.get(`https://cloud.iexapis.com/stable/stock/${e.stock}/price?token=${pubToken}`)
         })
-        Promise.all(promises)
+        return Promise.all(promises)
         .then(res_arr=>{
             const new_total = res_arr.reduce((acc,e,i)=>{
                 const currPrice = e.data;
@@ -74,20 +92,20 @@ class Portfolio extends React.Component{
     }
 
     render(){
-        const {data,email,balance,total} = this.state;
-        const stockupdate = this.stockupdate;
-        console.log('Rendered; email: ', email)
-        return <>
+        const {data,email,balance,total,purchaseError,loading} = this.state;
+        const purchaseStock = this.purchaseStock;
+        if(loading) return ''
+        else return <>
             <div className='container mt-5'>
                 <h3 className="display-6">{`Portfolio ($${total})`}</h3>
                 <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
                     {data.length > 0  ? 
-                        <Stocks data={data} updateTotalStocks={this.updateTotalStocks} /> 
+                        <Stocks data={data} updateTotalStocks={this.updateTotalStocks}/> 
                         : 
                         <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
                             <h2>No Stocks Yet</h2>
                         </div>}
-                    {email? <Stockform {...{email, stockupdate, balance}} />:null}
+                    <Stockform {...{email,purchaseStock, balance,purchaseError}} />
                 </div>
             </div>
       </>

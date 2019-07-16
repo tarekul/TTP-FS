@@ -11,15 +11,23 @@ export default class Stock extends React.Component{
     }
 
     componentDidMount(){
+        console.log('here')
         const {stock, shares} = this.props.obj;
         this.getOpenCurrPrice(stock, shares);
     }
-    
-    componentWillReceiveProps(newProps){
-        const {stock, shares} = newProps.obj
 
-        this.getOpenCurrPrice(stock, shares);
-    }
+    // componentDidUpdate(){
+    //     console.log('here')
+    //     const {stock, shares} = this.props.obj;
+    //     this.getOpenCurrPrice(stock, shares);
+    // }
+    
+    // componentWillReceiveProps(newProps){
+    //     console.log('here')
+    //     const {stock, shares} = newProps.obj
+
+    //     this.getOpenCurrPrice(stock, shares);
+    // }
     
     getOpenCurrPrice = (stock, shares) =>{
         const {pubToken} = this.state
