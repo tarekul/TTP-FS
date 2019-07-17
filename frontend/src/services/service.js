@@ -59,18 +59,14 @@ Service.updateStocksNBalance = (email,ticker,quantity,balance,price) =>{
     return Service.checkIfStockExists(email,ticker)
     .then(res=>{
         if(res.data.length === 0){
-            const saveStock = Service.postStock(email,ticker,quantity)
-            
-            return Promise.all([saveStock,updatebalance,post_trans])
-            // .then(()=>this.props.stockupdate())
+            const postStock = Service.postStock(email,ticker,quantity)
+            return Promise.all([postStock,updatebalance,post_trans])
         }
         else{
             const prev_quantity = res.data[0].shares
             const new_quantity = prev_quantity + quantity
             const shareupdate = Service.updateStock(email,ticker,new_quantity)
-                
             return Promise.all([shareupdate,updatebalance,post_trans])
-            // .then(()=>this.props.stockupdate())
         }
     }) 
 }

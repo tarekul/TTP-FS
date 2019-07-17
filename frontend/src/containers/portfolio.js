@@ -1,61 +1,49 @@
 import React from 'react'
-import Stockform from '../components/buystockform'
+import Stockform from '../components/buyStockComp/buystockform'
 import Stocks from '../components/stocks'
 import AuthContext from '../contexts/authContext'
 import Service from '../services/service'
 import axios from 'axios'
+import {Redirect} from 'react-router-dom'
 
 class Portfolio extends React.Component{
     static contextType = AuthContext
     state = {
         pubToken:'pk_36cce85f17164c5a815a8c420668ac38',
-        data:[],
+        data:null,
         email:null,
-        balance:0,
-        total:0,
+        balance:null,
+        total:null,
         purchaseError:null,
         loading:true
     }
 
-    componentDidMount(){
-        if(this.context) this.refreshState(true)
-    }
 
-    componentDidUpdate(pp, ps){
-        const {email} = this.state
-        if(!email && this.context) this.refreshState(true)
-    }
-
-
-    refreshState = (getBalance=false) =>{
-        const {email} = this.state
-        if(!email && this.context){
-            this.setState({email:this.context.email})
-        }
-        
-        Service.getStocks(email || this.context.email)
-        .then(res=>{
-            this.updateTotalStocks(res.data)
-            .then(()=>this.setState({data:res.data,purchaseError:null,loading:false}))
-            
-        })
-        if(getBalance){
-            Service.getUser(email || this.context.email)
-            .then(res=>{
-                console.log(res.data)
-                if(res.data.length > 0){
-                    const balance = res.data[0].balance
-                    this.setState({balance:balance})
-                }
+    refreshState = (email) =>{
+        const getStocks =  Service.getStocks(email)
+        const getUserBalance = Service.getUser(email)
+        Promise.all([getStocks,getUserBalance])
+        .then(res_arr=>{
+            const stock_list = res_arr[0].data
+            this.updateTotalStocks(stock_list)
+            .then(total=>{
+                const balance = res_arr[1].data[0].balance
+                
+                this.setState({
+                    data:stock_list,
+                    purchaseError:null,
+                    balance:balance,
+                    total:total,
+                    loading:false
+                })
             })
-        }
+            
+        }) 
     }
 
-    toggleLoading = () => this.setState({loading:false})
 
 
-    purchaseStock = (ticker,quantity) =>{
-        const {email} = this.context 
+    purchaseStock = (email,ticker,quantity) =>{
         const {balance,pubToken} = this.state
         axios.get(`https://cloud.iexapis.com/stable/stock/${ticker}/price?token=${pubToken}`)
         .then(res=>{
@@ -63,13 +51,13 @@ class Portfolio extends React.Component{
             if(balance > price * quantity){
                 const newBalance = balance - (price*quantity)
                 Service.updateStocksNBalance(email,ticker,quantity,newBalance)
-                .then(()=>this.refreshState(true))
+                .then(()=>{
+                    this.refreshState(email)
+                })
             }
             else this.setState({purchaseError:'Balance too low'})
         })
-        .catch(err=>{
-            this.setState({purchaseError:'Could not purchase stock'})
-        })
+        .catch(err=> this.setState({purchaseError:'Could not purchase stock'}))
     }
 
 
@@ -81,34 +69,57 @@ class Portfolio extends React.Component{
         })
         return Promise.all(promises)
         .then(res_arr=>{
-            const new_total = res_arr.reduce((acc,e,i)=>{
+            return res_arr.reduce((acc,e,i)=>{
                 const currPrice = e.data;
                 const qty = data[i].shares;
                 return acc + currPrice*qty;
             }, 0)
 
-            this.setState({total:new_total.toFixed(2)})
         })
     }
 
     render(){
-        const {data,email,balance,total,purchaseError,loading} = this.state;
-        const purchaseStock = this.purchaseStock;
-        if(loading) return ''
-        else return <>
-            <div className='container mt-5'>
-                <h3 className="display-6">{`Portfolio ($${total})`}</h3>
-                <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
-                    {data.length > 0  ? 
-                        <Stocks data={data} updateTotalStocks={this.updateTotalStocks}/> 
-                        : 
-                        <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
-                            <h2>No Stocks Yet</h2>
-                        </div>}
-                    <Stockform {...{email,purchaseStock, balance,purchaseError}} />
-                </div>
-            </div>
-      </>
+        return (
+            <AuthContext.Consumer>
+                {
+                    user=>{
+                        if(user) {
+                            const email = user.email
+                            const {data,balance,total,purchaseError,loading} = this.state;
+                            if(!data && !balance && !total){
+                                
+                                this.refreshState(email)
+                                return ''
+                            }
+                            else{
+                                const purchaseStock = this.purchaseStock;
+                               
+                                if(loading) return ''
+                                else return <>
+                                    <div className='container mt-5'>
+                                        <h3 className="display-6">{`Portfolio ($${total})`}</h3>
+                                        <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
+                                            {data.length > 0  ? 
+                                                <Stocks data={data} updateTotalStocks={this.updateTotalStocks}/> 
+                                                : 
+                                                <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
+                                                    <h2>No Stocks Yet</h2>
+                                                </div>}
+                                            <Stockform {...{email,purchaseStock, balance,purchaseError}} />
+                                        </div>
+                                    </div>
+                                </>
+                            }
+                            
+                        }
+                        else return <Redirect to='/signin' />
+                    }
+                }
+            </AuthContext.Consumer>
+        )
+
+
+        
     }
 }
 
