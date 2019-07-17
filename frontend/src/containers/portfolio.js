@@ -1,6 +1,6 @@
 import React from 'react'
 import Stockform from '../components/buyStockComp/buystockform'
-import Stocks from '../components/stocks'
+import Stocks from '../components/showStocks/stocks'
 import AuthContext from '../contexts/authContext'
 import Service from '../services/service'
 import axios from 'axios'
