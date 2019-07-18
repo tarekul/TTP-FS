@@ -10,7 +10,6 @@ export default class Stock extends React.Component{
     }
 
     componentDidMount(){
-        console.log('here in component did mount')
         const {stock, shares} = this.props.obj;
         this.getOpenCurrPrice(stock, shares);
     }

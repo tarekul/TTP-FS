@@ -27,7 +27,6 @@ class Portfolio extends React.Component{
             const stock_list = res_arr[0].data
             this.updateTotalStocks(stock_list)
             .then(total=>{
-                console.log(res_arr[1])
                 const balance = res_arr[1].data[0].balance
                 
                 this.setState({
@@ -51,7 +50,6 @@ class Portfolio extends React.Component{
             const price = res.data.latestPrice
             if(balance > price * quantity){
                 const newBalance = balance - (price*quantity)
-                Service.postTrans(email,ticker,quantity,price)
                 Service.updateStocksNBalance(email,ticker,quantity,newBalance)
                 .then(()=>{
                     Service.postTrans(email,ticker,quantity,price)
@@ -72,11 +70,12 @@ class Portfolio extends React.Component{
         })
         return Promise.all(promises)
         .then(res_arr=>{
-            return res_arr.reduce((acc,e,i)=>{
-                const currPrice = e.data;
+            const total =  res_arr.reduce((acc,e,i)=>{
+                const currPrice = e.data.latestPrice;
                 const qty = data[i].shares;
                 return acc + currPrice*qty;
             }, 0)
+            return total.toFixed(2)
 
         })
     }
@@ -91,7 +90,6 @@ class Portfolio extends React.Component{
                             const {data,balance,total,purchaseError,loading} = this.state;
                             if(!data && !balance && !total){
                                 this.refreshState(email)
-                                console.log('here')
                                 return ''
                             }
                             else{
