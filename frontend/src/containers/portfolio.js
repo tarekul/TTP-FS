@@ -100,7 +100,7 @@ class Portfolio extends React.Component{
                                 if(loading) return ''
                                 else {
                                     return <>
-                                    <div className='container mt-5'>
+                                    <div className='container mt-5' style={{backgroundColor:'#98ccd3'}}>
                                         <h3 className="display-6">{`Portfolio ($${total})`}</h3>
                                         <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
                                             {data.length > 0  ? 

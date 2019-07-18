@@ -3,7 +3,7 @@ import React from 'react'
 export default function(props){
     const {ifFormErr,ifPurchaseErr,balance,handleInput,onSubmit} = props
     return <>
-            <div className='col-6' style={{backgroundColor:'whitesmoke',padding:'5%'}}>
+            <div className='col-6' style={{backgroundColor:'white smoke',padding:'5%',}}>
             <div className='row'>
                 <div className='col'>
                     <h4>{`Cash $${balance}`}</h4>

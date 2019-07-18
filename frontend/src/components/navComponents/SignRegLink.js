@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 const Navlinks = props =>{
-    return <div className='container mt-5'>
+    return <div className='container mt-5' style={{backgroundColor:'#c8dad3'}}>
         <div style={{textAlign:'center'}}>
             <h1 className="display-3">Stock Portfolio</h1>
         </div>
