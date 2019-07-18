@@ -19,7 +19,10 @@ class SignIn extends React.Component{
         const {email,password} = this.state
         if(email && password){
             firebase.auth().signInWithEmailAndPassword(email,password)
-            .then(()=> this.props.history.push('/'))
+            .then(()=>{
+                console.log('firebase user sign in success')
+                this.props.history.push('/')
+            })
             .catch(err=>this.setState({error:err.message}))
         }
         else this.setState({error:'Please enter credentials'})
@@ -32,17 +35,16 @@ class SignIn extends React.Component{
                     user=>{
                         if(!user){
                             const {error} = this.state
-                            const alert = error ? <div class="alert alert-danger" role="alert">
+                            const alert = error ? <div className="alert alert-danger" role="alert">
                                             {error} </div> : ''
                             return (
-                                <div class='container mt-5'>
+                                <div className='container mt-5'>
                                     {alert}
                                     <SignInForm onChange={this.onChange}  onSubmit={this.onSubmit}/>
                                 </div>
                                 
                             )
                         }
-                        else return <Redirect to='/' />
                     }
                 }
             </AuthContext.Consumer>

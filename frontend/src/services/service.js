@@ -14,7 +14,7 @@ Service.getUser = email =>{
     return axios.get(`http://localhost:6003/user/${email}`)
 }
 
-Service.postUser = (name,email,balance,uid) =>{
+Service.postUser = (name,email,uid) =>{
     return axios.post(`http://localhost:6003/user`,{
         name:name,
         email:email,

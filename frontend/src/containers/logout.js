@@ -13,6 +13,7 @@ class Logout extends React.Component{
     }
     
     render(){
+        console.log('logout ran')
         const {redirect} = this.state
         if(redirect) return <Redirect to='/register' />
         return <h1>Logout ....</h1>

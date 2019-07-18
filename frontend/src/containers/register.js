@@ -31,8 +31,11 @@ class Register extends React.Component{
         if(firstname && lastname && email && password) {
             firebase.auth().createUserWithEmailAndPassword(email,password)
             .then((response)=>{
-                Service.postUser(firstname + " " + lastname,email,5000,response.user.uid)
+                console.log('bfore posting user to db')
+                Service.postUser(firstname + " " + lastname,email,response.user.uid)
                 .then(() => {
+                    console.log('about to leave registration page')
+                    console.log(this.props.history)
                     this.props.history.push('/')
                 })
                 
@@ -43,15 +46,16 @@ class Register extends React.Component{
     }
     
     render(){
+        console.log('register render lol')
         return <>
         <AuthContext.Consumer>
             {
                 user =>{
+                    console.log('testing authcontext behavior')
                     if(!user){
-                        const {validated,error,signedup} = this.state
+                        const {validated,error} = this.state
                         const alert = !validated ? <Validateform /> : ''
                         const alert2 = error ? <RegisterError error={error} /> : ''
-                        if(signedup) return <Redirect to='/portfolio' />
                         return <>
                             <div className='container mt-5 jumbotron'>
                             <div style={{minHeight:'10vh'}}>
@@ -62,7 +66,6 @@ class Register extends React.Component{
                             </div>
                         </>
                     }
-                    else return <Redirect to='/' />
                 }
             }
         </AuthContext.Consumer>

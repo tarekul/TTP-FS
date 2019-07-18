@@ -27,6 +27,7 @@ class Portfolio extends React.Component{
             const stock_list = res_arr[0].data
             this.updateTotalStocks(stock_list)
             .then(total=>{
+                console.log(res_arr[1])
                 const balance = res_arr[1].data[0].balance
                 
                 this.setState({
@@ -45,13 +46,15 @@ class Portfolio extends React.Component{
 
     purchaseStock = (email,ticker,quantity) =>{
         const {balance,pubToken} = this.state
-        axios.get(`https://cloud.iexapis.com/stable/stock/${ticker}/price?token=${pubToken}`)
+        axios.get(`https://cloud.iexapis.com/stable/stock/${ticker}/quote?token=${pubToken}`)
         .then(res=>{
-            const price = res.data
+            const price = res.data.latestPrice
             if(balance > price * quantity){
                 const newBalance = balance - (price*quantity)
+                Service.postTrans(email,ticker,quantity,price)
                 Service.updateStocksNBalance(email,ticker,quantity,newBalance)
                 .then(()=>{
+                    Service.postTrans(email,ticker,quantity,price)
                     this.refreshState(email)
                 })
             }
@@ -65,7 +68,7 @@ class Portfolio extends React.Component{
         const pubToken = 'pk_36cce85f17164c5a815a8c420668ac38'
         
         const promises = data.map(e=>{
-            return axios.get(`https://cloud.iexapis.com/stable/stock/${e.stock}/price?token=${pubToken}`)
+            return axios.get(`https://cloud.iexapis.com/stable/stock/${e.stock}/quote?token=${pubToken}`)
         })
         return Promise.all(promises)
         .then(res_arr=>{
@@ -87,15 +90,16 @@ class Portfolio extends React.Component{
                             const email = user.email
                             const {data,balance,total,purchaseError,loading} = this.state;
                             if(!data && !balance && !total){
-                                
                                 this.refreshState(email)
+                                console.log('here')
                                 return ''
                             }
                             else{
                                 const purchaseStock = this.purchaseStock;
                                
                                 if(loading) return ''
-                                else return <>
+                                else {
+                                    return <>
                                     <div className='container mt-5'>
                                         <h3 className="display-6">{`Portfolio ($${total})`}</h3>
                                         <div className='row' style={{minHeight:'72vh',backgroundColor:'whitesmoke'}}>
@@ -109,10 +113,11 @@ class Portfolio extends React.Component{
                                         </div>
                                     </div>
                                 </>
+                                }
                             }
                             
                         }
-                        else return <Redirect to='/signin' />
+
                     }
                 }
             </AuthContext.Consumer>

@@ -14,14 +14,17 @@ class App extends React.Component{
     user:null
   }
   componentDidMount(){
+    console.log('in appjs')
     this.unsubscribe = firebase.auth().onAuthStateChanged(user=>this.setState({user}))
   }
 
   componentWillUnmount(){
     this.unsubscribe()
   }
+  
   render(){
     const {user} = this.state
+    console.log('user...in appjs render', user)
     return (
       <HashRouter>
         <AuthContext.Provider value={user}>

@@ -6,44 +6,31 @@ export default class Stock extends React.Component{
         stock: '',
         shares: '',
         color: '',
-        currentPrice: '',
-        pubToken:'pk_36cce85f17164c5a815a8c420668ac38'
+        currentPrice: ''
     }
 
     componentDidMount(){
-        console.log('here')
+        console.log('here in component did mount')
         const {stock, shares} = this.props.obj;
         this.getOpenCurrPrice(stock, shares);
     }
 
     componentWillReceiveProps(nextProps){
-        console.log('hereeeeeeeeeeee')
         const {stock, shares} = nextProps.obj;
         this.getOpenCurrPrice(stock, shares);
     }
 
     
     getOpenCurrPrice = (stock, shares) =>{
-        const {pubToken} = this.state
-        const openPrice = axios.get(`https://cloud.iexapis.com/stable/stock/${stock}/ohlc?token=${pubToken}`)
-        const currentPrice = axios.get(`https://cloud.iexapis.com/stable/stock/${stock}/price?token=${pubToken}`)
+        //const getOpenPrice = axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stock}&apikey=WXV4KNTDLX5R5A3N`)
+        const getCurrentPrice = axios.get(`https://cloud.iexapis.com/stable/stock/${stock}/quote?token=pk_36cce85f17164c5a815a8c420668ac38`)
 
-        Promise.all([openPrice,currentPrice])
-        .then(([res1, res2])=>{
-            let color = '';
-
-            if(res1.data.open.price < res2.data){
-                color = 'green'
-            } else if(res1.data.open.price > res2.data){
-                color = 'red'
-            } else {
-                color = 'grey'
-            }
-
-            this.setState({stock, shares, color, currentPrice: res2.data, })
-
-            
+        Promise.all([getCurrentPrice])
+        .then(([res2])=>{
+            const currentPrice = res2.data.latestPrice
+            this.setState({stock, shares, color:'black', currentPrice: currentPrice })
         })
+        .catch(err=>console.log(err))
     }
 
     render() {
